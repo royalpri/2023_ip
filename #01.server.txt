@@ -1,0 +1,38 @@
+config terminal
+
+hostname LAB_SVR
+
+
+ipv6 unicast-routing
+
+interface Loopback0
+ no ip address
+ ipv6 address 64:FF9B::1/128
+ no ipv6 redirects
+!
+interface Ethernet0/0
+ no switchport
+ no ip address
+ ipv6 address 2400:800:500:0:175:254:51:63/126
+ no ipv6 redirects
+ no shutdown
+!
+interface Ethernet0/1
+ no switchport
+ no ip address
+ ipv6 address 2400:800:500:0:175:254:51:67/126
+ no ipv6 redirects
+ no shutdown
+!
+
+ipv6 route 2001:E60:1111::/128 Ethernet0/0 2400:800:500:0:175:254:51:62
+ipv6 route 2001:E60:CAFE::/128 Ethernet0/1 2400:800:500:0:175:254:51:66
+ipv6 route ::/0 Ethernet0/1 2400:800:500:0:175:254:51:66
+ipv6 route ::/0 Ethernet0/0 2400:800:500:0:175:254:51:62
+
+end
+
+
+
+copy running-config startup-config
+

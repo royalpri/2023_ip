@@ -1,0 +1,57 @@
+delete interfaces 
+set interfaces em1 unit 0 family inet address 169.254.0.2/24 
+set system root-authentication plain-text-password 
+core123!
+core123!
+
+set system host-name TEST_CSQ
+
+set interfaces xe-0/0/0 description "### b.leaf ###"
+set interfaces xe-0/0/0 unit 0 family inet address 1.1.1.1/30
+set interfaces xe-0/0/0 unit 0 family inet6 filter input 5G_blacklist_v6
+set interfaces xe-0/0/0 unit 0 family inet6 address 2001:e60:e650:5105:10:20:71:11/126
+set interfaces xe-0/0/1 description "### psw01 ###"
+set interfaces xe-0/0/1 unit 0 family inet address 1.1.1.5/30
+set interfaces xe-0/0/1 unit 0 family inet6 address 2001:e60:e650:5104:10:59:129:12/126
+set interfaces xe-0/0/2 description "### psw02 ###"
+set interfaces xe-0/0/2 unit 0 family inet address 1.1.1.9/30
+set interfaces xe-0/0/2 unit 0 family inet6 address 2001:e60:e650:5104:10:59:150:41/126
+
+
+set routing-options static route 0.0.0.0/0 next-hop 175.254.0.219
+set routing-options static route 0.0.0.0/0 no-readvertise
+
+set routing-options rib inet6.0 static route ::/0 next-hop 2001:e60:e650:5104:10:59:129:13
+set routing-options rib inet6.0 static route 2001:e60:cafe::/128 next-hop 2001:e60:e650:5105:10:20:71:12
+set routing-options rib inet6.0 static route 2001:e60:1111::/128 next-hop 2001:e60:e650:5105:10:20:71:12
+
+set firewall family inet6 filter 5G_blacklist_v6 term DNS from destination-address 2001:e60:e100::341/128
+set firewall family inet6 filter 5G_blacklist_v6 term DNS from destination-address 2001:e60:e000:6d::321/128
+set firewall family inet6 filter 5G_blacklist_v6 term DNS from destination-address 2001:e60:e050:0:168:126:63:1/128
+set firewall family inet6 filter 5G_blacklist_v6 term DNS from destination-address 2001:e60:e000::1:0:0/96
+set firewall family inet6 filter 5G_blacklist_v6 term DNS from destination-address 64:ff9b::/96
+set firewall family inet6 filter 5G_blacklist_v6 term DNS then accept
+
+set firewall family inet6 filter 5G_blacklist_v6 term IPv6_Infra from destination-address 2001:e60:e000::/40
+set firewall family inet6 filter 5G_blacklist_v6 term IPv6_Infra from destination-address 2001:e60:e100::/40
+set firewall family inet6 filter 5G_blacklist_v6 term IPv6_Infra from destination-address 2001:e60:e200::/40
+set firewall family inet6 filter 5G_blacklist_v6 term IPv6_Infra from destination-address 2001:e60:e300::/40
+set firewall family inet6 filter 5G_blacklist_v6 term IPv6_Infra from destination-address 2001:e60:e400::/40
+set firewall family inet6 filter 5G_blacklist_v6 term IPv6_Infra from destination-address 2001:e60:e500::/40
+set firewall family inet6 filter 5G_blacklist_v6 term IPv6_Infra from destination-address 2001:e60:e600::/40
+set firewall family inet6 filter 5G_blacklist_v6 term IPv6_Infra then discard
+
+set firewall family inet6 filter 5G_blacklist_v6 term IPv6_Infra from destination-address 2001:e60:e000::/40
+set firewall family inet6 filter 5G_blacklist_v6 term IPv6_Infra from destination-address 2001:e60:e100::/40
+set firewall family inet6 filter 5G_blacklist_v6 term IPv6_Infra from destination-address 2001:e60:e200::/40
+set firewall family inet6 filter 5G_blacklist_v6 term IPv6_Infra from destination-address 2001:e60:e300::/40
+set firewall family inet6 filter 5G_blacklist_v6 term IPv6_Infra from destination-address 2001:e60:e400::/40
+set firewall family inet6 filter 5G_blacklist_v6 term IPv6_Infra from destination-address 2001:e60:e500::/40
+set firewall family inet6 filter 5G_blacklist_v6 term IPv6_Infra from destination-address 2001:e60:e600::/40
+set firewall family inet6 filter 5G_blacklist_v6 term IPv6_Infra then discard
+
+
+set firewall family inet6 filter 5G_blacklist_v6 term 5G_blacklist_v6_Permit then accept
+
+
+commit

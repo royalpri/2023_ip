@@ -1,0 +1,34 @@
+config terminal
+
+hostname lab_psw01
+
+ipv6 unicast-routing
+
+
+interface Ethernet0/0
+ no switchport
+ no ip address
+ ipv6 address 2400:800:500:0:175:254:51:62/126
+ no ipv6 redirects
+ no shutdown
+!         
+interface Ethernet0/1
+ no switchport
+ ip address 1.1.1.6 255.255.255.252
+ no ip redirects
+ ipv6 address 2001:E60:E650:5104:10:59:129:13/126
+ no ipv6 redirects
+ no shutdown
+!
+
+
+ipv6 route 64:FF9B::/96 Ethernet0/0 2400:800:500:0:175:254:51:63
+ipv6 route ::/0 Ethernet0/1 2001:E60:E650:5104:10:59:129:12
+!
+
+
+end
+          
+
+copy running-config startup-config
+

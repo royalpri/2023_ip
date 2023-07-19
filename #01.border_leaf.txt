@@ -1,0 +1,35 @@
+config terminal
+
+hostname lab_border_leaf
+
+
+ipv6 unicast-routing
+ipv6 cef
+
+interface Loopback0
+ no ip address
+ ipv6 address 2001:E60:CAFE::/128
+ no ipv6 redirects
+!
+interface Loopback10
+ no ip address
+ ipv6 address 2001:E60:1111::/128
+ no ipv6 redirects
+!
+interface Ethernet0/0
+ no switchport
+ ip address 1.1.1.2 255.255.255.252
+ no ip redirects
+ ipv6 address 2001:E60:E650:5105:10:20:71:12/126
+ no ipv6 redirects
+ no shutdown
+!
+
+      
+ipv6 route ::/0 Ethernet0/0 2001:E60:E650:5105:10:20:71:11 name default_ipv6
+!
+end
+
+
+copy running-config startup-config
+
