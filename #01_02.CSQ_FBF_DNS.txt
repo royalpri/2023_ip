@@ -1,0 +1,10 @@
+## DNS Filter 처리
+
+set firewall family inet6 filter 5G_blacklist_v6 term To_DNSW_DNS from destination-address 64:ff9b::/96
+set firewall family inet6 filter 5G_blacklist_v6 term To_DNSW_DNS from source-prefix-list To_DNSW
+set firewall family inet6 filter 5G_blacklist_v6 term To_DNSW_DNS then count To_DNSW_DNS
+set firewall family inet6 filter 5G_blacklist_v6 term To_DNSW_DNS then log
+set firewall family inet6 filter 5G_blacklist_v6 term To_DNSW_DNS then routing-instance To_DNSW
+insert firewall family inet6 filter 5G_blacklist_v6 term To_DNSW_DNS before term DNS
+
+
