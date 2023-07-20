@@ -5,6 +5,7 @@ set policy-options policy-statement Deny-BGP term 20 from protocol bgp
 set policy-options policy-statement Deny-BGP term 20 to protocol ospf
 set policy-options policy-statement Deny-BGP term 20 then reject
 set protocols isis export Deny-BGP 
+commit
 
 
 run show isis database          
