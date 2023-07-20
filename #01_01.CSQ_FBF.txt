@@ -1,0 +1,22 @@
+#1. prefix-list 생성
+set policy-options prefix-list To_DNSW 2001:e60:cafe::/128
+
+#2. routing instance 생성 (VRF)
+
+set routing-instances To_DNSW instance-type virtual-router
+set routing-instances To_DNSW routing-options rib To_DNSW.inet6.0 static route ::/0 next-hop 2001:e60:e650:5104:10:59:150:42
+
+#3. FBF 생성 (조건에 맞으면 routing-instance 변경)
+set firewall family inet6 filter 5G_blacklist_v6 term To_DNSW from source-prefix-list To_DNSW
+set firewall family inet6 filter 5G_blacklist_v6 term To_DNSW then count To_DNSW
+set firewall family inet6 filter 5G_blacklist_v6 term To_DNSW then log
+set firewall family inet6 filter 5G_blacklist_v6 term To_DNSW then routing-instance To_DNSW
+set firewall family inet6 filter 5G_blacklist_v6 term To_DNSW then accept
+insert firewall family inet6 filter 5G_blacklist_v6 term To_DNSW before term IPv6_Infra
+
+#4. Leak Interface 생성
+set routing-options interface-routes rib-group inet6 LEAK-INTERFACE_v6
+set routing-options rib-groups LEAK-INTERFACE_v6 import-rib inet6.0
+set routing-options rib-groups LEAK-INTERFACE_v6 import-rib To_DNSW.inet6.0
+
+
