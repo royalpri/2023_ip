@@ -14,4 +14,5 @@ run show isis database
 
 # 기존 정책 삭제 
 delete protocols isis export BGP-isis 
+commit
 
