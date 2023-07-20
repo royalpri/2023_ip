@@ -1,0 +1,1 @@
+set interfaces lo0 unit 0 family inet6 address 2400:800:500:0:175:254:1:127/128
