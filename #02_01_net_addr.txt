@@ -1,0 +1,7 @@
+
+set interfaces lo0 unit 0 family iso address 49.5610.1752.5400.1127.00
+
+
+
+commit
+
