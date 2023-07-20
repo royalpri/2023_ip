@@ -1,0 +1,17 @@
+[CSQ]
+
+set protocols bgp group 5G-NAT-UPSW cluster 175.254.1.127
+
+
+
+[MCR]
+config terminal
+
+router bgp 9964
+
+ neighbor-group CS-RRClient
+  address-family ipv4 unicast
+   route-reflector-client
+
+commit
+end
