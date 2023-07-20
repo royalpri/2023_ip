@@ -1,0 +1,12 @@
+set protocols isis interface xe-0/0/6.0 level 2 metric 100
+commit
+
+run show route 175.254.0.13 
+
+set groups ISIS-Metric-Default protocols isis interface <xe-*> level 2 metric 1000
+set groups ISIS-Metric-Default protocols isis interface <xe-*> level 2 ipv6-unicast-metric 1000
+set groups ISIS-Metric-Default protocols isis interface <et-*> level 2 metric 1000
+set groups ISIS-Metric-Default protocols isis interface <et-*> level 2 ipv6-unicast-metric 1000
+set protocols isis apply-groups ISIS-Metric-Default
+
+commit
