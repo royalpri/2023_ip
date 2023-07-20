@@ -1,0 +1,16 @@
+set policy-options policy-statement Deny-BGP term 10 from protocol bgp
+set policy-options policy-statement Deny-BGP term 10 to protocol isis
+set policy-options policy-statement Deny-BGP term 10 then reject
+set policy-options policy-statement Deny-BGP term 20 from protocol bgp
+set policy-options policy-statement Deny-BGP term 20 to protocol ospf
+set policy-options policy-statement Deny-BGP term 20 then reject
+set protocols isis export Deny-BGP 
+
+
+run show isis database          
+
+
+
+# 기존 정책 삭제 
+delete protocols isis export BGP-isis 
+
