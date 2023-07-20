@@ -1,0 +1,68 @@
+config terminal
+    
+
+route-policy Static-BGP
+  if tag is 3011 then
+    set community (9964:3011, 9964:9611)
+    set origin igp
+  elseif tag is 3021 then
+    set community (9964:3021, 9964:9611)
+    set origin igp
+  elseif tag is 5000 then
+    set community (9964:5000)
+    set origin igp
+  elseif tag is 5001 then
+    set community (9964:5001)
+    set origin igp
+  elseif tag is 5009 then
+    set community (9964:5009)
+    set origin igp
+  elseif tag is 100 then
+    set community (9964:100)
+    set origin igp
+  else
+    drop
+  endif
+end-policy
+!
+
+router bgp 9964
+ nsr
+ bgp router-id 175.254.0.13
+ address-family ipv4 unicast
+  maximum-paths ibgp 2
+  redistribute static route-policy Static-BGP
+ !
+ address-family ipv6 unicast
+  maximum-paths ibgp 2
+  redistribute static route-policy Static-BGP
+ !
+ neighbor-group CS-RRClient
+  remote-as 9964
+  update-source Loopback0
+  address-family ipv4 unicast
+   next-hop-self
+  !
+ !
+ neighbor-group CS-RRClient-IPv6
+  remote-as 9964
+  update-source Loopback0
+  address-family ipv6 unicast
+   route-reflector-client
+   next-hop-self
+  !
+ !
+ neighbor 175.254.1.127
+  use neighbor-group CS-RRClient
+  description ## W.Busan-CSQ127 ##
+ !
+ neighbor 2400:800:500:0:175:254:1:127
+  use neighbor-group CS-RRClient-IPv6
+  description ## W.Busan-CSQ127 ##
+ !
+
+commit
+
+end
+
+               

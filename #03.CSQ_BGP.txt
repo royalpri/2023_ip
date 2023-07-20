@@ -1,0 +1,169 @@
+set routing-options autonomous-system 9964
+set routing-options autonomous-system asdot-notation
+set protocols bgp traceoptions file bgp-log
+set protocols bgp traceoptions file size 1m
+set protocols bgp traceoptions file files 7
+set protocols bgp traceoptions file world-readable
+set protocols bgp traceoptions flag state
+set protocols bgp preference 200
+set protocols bgp hold-time 180
+set protocols bgp advertise-inactive
+set protocols bgp log-updown
+set protocols bgp group MCR-RRServer type internal
+set protocols bgp group MCR-RRServer local-address 175.254.1.127
+set protocols bgp group MCR-RRServer family inet unicast
+set protocols bgp group MCR-RRServer export Direct-BGP
+set protocols bgp group MCR-RRServer export Static-BGP
+set protocols bgp group MCR-RRServer neighbor 175.254.0.13 description "### LAB-MCN ###"
+set protocols bgp group MCR-RRServer-IPv6 type internal
+set protocols bgp group MCR-RRServer-IPv6 local-address 2400:800:500:0:175:254:1:127
+set protocols bgp group MCR-RRServer-IPv6 family inet6 unicast
+set protocols bgp group MCR-RRServer-IPv6 export Direct-BGP-IPv6
+set protocols bgp group MCR-RRServer-IPv6 export Static-BGP-IPv6
+set protocols bgp group MCR-RRServer-IPv6 neighbor 2400:800:500:0:175:254:0:13 description "### LAB-MCN ###"
+
+set protocols bgp group 5G-NAT-UPSW type internal
+set protocols bgp group 5G-NAT-UPSW local-address 175.254.1.127
+set protocols bgp group 5G-NAT-UPSW family inet unicast
+set protocols bgp group 5G-NAT-UPSW authentication-key "new1234!"
+set protocols bgp group 5G-NAT-UPSW export Direct-BGP
+set protocols bgp group 5G-NAT-UPSW export Static-BGP
+set protocols bgp group 5G-NAT-UPSW neighbor 175.254.1.175 description "### LAB-NSW ###"
+
+set protocols isis export BGP-isis
+set policy-options prefix-list BGP-Peers apply-path "protocols bgp group <*> neighbor <*>"
+set policy-options policy-statement BGP-isis term 10 from protocol bgp
+set policy-options policy-statement BGP-isis term 10 to protocol isis
+set policy-options policy-statement BGP-isis term 10 then accept
+
+set policy-options policy-statement Direct-BGP term 10 from family inet
+set policy-options policy-statement Direct-BGP term 10 from interface em0.0
+set policy-options policy-statement Direct-BGP term 10 then reject
+set policy-options policy-statement Direct-BGP term 20 from family inet
+set policy-options policy-statement Direct-BGP term 20 from protocol direct
+set policy-options policy-statement Direct-BGP term 20 then origin igp
+set policy-options policy-statement Direct-BGP term 20 then community set 9611
+set policy-options policy-statement Direct-BGP term 20 then accept
+set policy-options policy-statement Direct-BGP-IPv6 term 10 from family inet6
+set policy-options policy-statement Direct-BGP-IPv6 term 10 from interface em0.0
+set policy-options policy-statement Direct-BGP-IPv6 term 10 then reject
+set policy-options policy-statement Direct-BGP-IPv6 term 20 from family inet6
+set policy-options policy-statement Direct-BGP-IPv6 term 20 from protocol direct
+set policy-options policy-statement Direct-BGP-IPv6 term 20 then origin igp
+set policy-options policy-statement Direct-BGP-IPv6 term 20 then community set 9611
+set policy-options policy-statement Direct-BGP-IPv6 term 20 then accept
+set policy-options policy-statement Static-BGP term Central from family inet
+set policy-options policy-statement Static-BGP term Central from protocol static
+set policy-options policy-statement Static-BGP term Central from tag 1001
+set policy-options policy-statement Static-BGP term Central then origin igp
+set policy-options policy-statement Static-BGP term Central then community set 9611
+set policy-options policy-statement Static-BGP term Central then community add 1001
+set policy-options policy-statement Static-BGP term Central then next-hop self
+set policy-options policy-statement Static-BGP term Central then accept
+set policy-options policy-statement Static-BGP term Edge from family inet
+set policy-options policy-statement Static-BGP term Edge from protocol static
+set policy-options policy-statement Static-BGP term Edge from tag 1002
+set policy-options policy-statement Static-BGP term Edge then origin igp
+set policy-options policy-statement Static-BGP term Edge then community set 9611
+set policy-options policy-statement Static-BGP term Edge then community add 1002
+set policy-options policy-statement Static-BGP term Edge then next-hop self
+set policy-options policy-statement Static-BGP term Edge then accept
+set policy-options policy-statement Static-BGP term PSW from family inet
+set policy-options policy-statement Static-BGP term PSW from protocol static
+set policy-options policy-statement Static-BGP term PSW from tag 1003
+set policy-options policy-statement Static-BGP term PSW then origin igp
+set policy-options policy-statement Static-BGP term PSW then community set 9611
+set policy-options policy-statement Static-BGP term PSW then community add 1003
+set policy-options policy-statement Static-BGP term PSW then next-hop self
+set policy-options policy-statement Static-BGP term PSW then accept
+set policy-options policy-statement Static-BGP term DNS from family inet
+set policy-options policy-statement Static-BGP term DNS from protocol static
+set policy-options policy-statement Static-BGP term DNS from tag 1004
+set policy-options policy-statement Static-BGP term DNS then origin igp
+set policy-options policy-statement Static-BGP term DNS then community set 9611
+set policy-options policy-statement Static-BGP term DNS then community add 1004
+set policy-options policy-statement Static-BGP term DNS then next-hop self
+set policy-options policy-statement Static-BGP term DNS then accept
+set policy-options policy-statement Static-BGP term NFVO from family inet
+set policy-options policy-statement Static-BGP term NFVO from protocol static
+set policy-options policy-statement Static-BGP term NFVO from tag 1005
+set policy-options policy-statement Static-BGP term NFVO then origin igp
+set policy-options policy-statement Static-BGP term NFVO then community set 9611
+set policy-options policy-statement Static-BGP term NFVO then community add 1005
+set policy-options policy-statement Static-BGP term NFVO then next-hop self
+set policy-options policy-statement Static-BGP term NFVO then accept
+set policy-options policy-statement Static-BGP term Auth from family inet
+set policy-options policy-statement Static-BGP term Auth from protocol static
+set policy-options policy-statement Static-BGP term Auth from tag 1007
+set policy-options policy-statement Static-BGP term Auth then origin igp
+set policy-options policy-statement Static-BGP term Auth then community set 9611
+set policy-options policy-statement Static-BGP term Auth then community add 1007
+set policy-options policy-statement Static-BGP term Auth then next-hop self
+set policy-options policy-statement Static-BGP term Auth then accept
+set policy-options policy-statement Static-BGP-IPv6 term Central from family inet6
+set policy-options policy-statement Static-BGP-IPv6 term Central from protocol static
+set policy-options policy-statement Static-BGP-IPv6 term Central from tag 1001
+set policy-options policy-statement Static-BGP-IPv6 term Central then origin igp
+set policy-options policy-statement Static-BGP-IPv6 term Central then community set 9611
+set policy-options policy-statement Static-BGP-IPv6 term Central then community add 1001
+set policy-options policy-statement Static-BGP-IPv6 term Central then next-hop self
+set policy-options policy-statement Static-BGP-IPv6 term Central then accept
+set policy-options policy-statement Static-BGP-IPv6 term Edge from family inet6
+set policy-options policy-statement Static-BGP-IPv6 term Edge from protocol static
+set policy-options policy-statement Static-BGP-IPv6 term Edge from tag 1002
+set policy-options policy-statement Static-BGP-IPv6 term Edge then origin igp
+set policy-options policy-statement Static-BGP-IPv6 term Edge then community set 9611
+set policy-options policy-statement Static-BGP-IPv6 term Edge then community add 1002
+set policy-options policy-statement Static-BGP-IPv6 term Edge then next-hop self
+set policy-options policy-statement Static-BGP-IPv6 term Edge then accept
+set policy-options policy-statement Static-BGP-IPv6 term PSW from family inet6
+set policy-options policy-statement Static-BGP-IPv6 term PSW from protocol static
+set policy-options policy-statement Static-BGP-IPv6 term PSW from tag 1003
+set policy-options policy-statement Static-BGP-IPv6 term PSW then origin igp
+set policy-options policy-statement Static-BGP-IPv6 term PSW then community set 9611
+set policy-options policy-statement Static-BGP-IPv6 term PSW then community add 1003
+set policy-options policy-statement Static-BGP-IPv6 term PSW then next-hop self
+set policy-options policy-statement Static-BGP-IPv6 term PSW then accept
+set policy-options policy-statement Static-BGP-IPv6 term DNS from family inet6
+set policy-options policy-statement Static-BGP-IPv6 term DNS from protocol static
+set policy-options policy-statement Static-BGP-IPv6 term DNS from tag 1004
+set policy-options policy-statement Static-BGP-IPv6 term DNS then origin igp
+set policy-options policy-statement Static-BGP-IPv6 term DNS then community set 9611
+set policy-options policy-statement Static-BGP-IPv6 term DNS then community add 1004
+set policy-options policy-statement Static-BGP-IPv6 term DNS then next-hop self
+set policy-options policy-statement Static-BGP-IPv6 term DNS then accept
+set policy-options policy-statement Static-BGP-IPv6 term NFVO from family inet6
+set policy-options policy-statement Static-BGP-IPv6 term NFVO from protocol static
+set policy-options policy-statement Static-BGP-IPv6 term NFVO from tag 1005
+set policy-options policy-statement Static-BGP-IPv6 term NFVO then origin igp
+set policy-options policy-statement Static-BGP-IPv6 term NFVO then community set 9611
+set policy-options policy-statement Static-BGP-IPv6 term NFVO then community add 1005
+set policy-options policy-statement Static-BGP-IPv6 term NFVO then next-hop self
+set policy-options policy-statement Static-BGP-IPv6 term NFVO then accept
+set policy-options policy-statement Static-BGP-IPv6 term Auth from family inet6
+set policy-options policy-statement Static-BGP-IPv6 term Auth from protocol static
+set policy-options policy-statement Static-BGP-IPv6 term Auth from tag 1007
+set policy-options policy-statement Static-BGP-IPv6 term Auth then origin igp
+set policy-options policy-statement Static-BGP-IPv6 term Auth then community set 9611
+set policy-options policy-statement Static-BGP-IPv6 term Auth then community add 1007
+set policy-options policy-statement Static-BGP-IPv6 term Auth then next-hop self
+set policy-options policy-statement Static-BGP-IPv6 term Auth then accept
+
+
+set policy-options community 1001 members 9964:1001
+set policy-options community 1002 members 9964:1002
+set policy-options community 1003 members 9964:1003
+set policy-options community 1004 members 9964:1004
+set policy-options community 1005 members 9964:1005
+set policy-options community 1007 members 9964:1007
+set policy-options community 9611 members 9964:9611
+
+
+
+set policy-options policy-statement Deny-BGP term 10 from protocol bgp
+set policy-options policy-statement Deny-BGP term 10 to protocol isis
+set policy-options policy-statement Deny-BGP term 10 then reject
+set policy-options policy-statement Deny-BGP term 20 from protocol bgp
+set policy-options policy-statement Deny-BGP term 20 to protocol ospf
+set policy-options policy-statement Deny-BGP term 20 then reject
+
