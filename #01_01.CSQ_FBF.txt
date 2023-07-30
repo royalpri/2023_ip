@@ -11,7 +11,6 @@ set firewall family inet6 filter 5G_blacklist_v6 term To_DNSW from source-prefix
 set firewall family inet6 filter 5G_blacklist_v6 term To_DNSW then count To_DNSW
 set firewall family inet6 filter 5G_blacklist_v6 term To_DNSW then log
 set firewall family inet6 filter 5G_blacklist_v6 term To_DNSW then routing-instance To_DNSW
-set firewall family inet6 filter 5G_blacklist_v6 term To_DNSW then accept
 insert firewall family inet6 filter 5G_blacklist_v6 term To_DNSW before term IPv6_Infra
 
 #4. Leak Interface 생성
